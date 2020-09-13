@@ -1,4 +1,8 @@
+import sys
 import matplotlib.pyplot as plt
+
+# This will allow ~1000 iterations for n
+sys.setrecursionlimit(1010)
 
 def Menu():
     print('1: Factorial()')
@@ -20,7 +24,7 @@ def Choose(n, k):
 
 # Standard method of computing factorial via recursion
 def Factorial(n):
-    if n == 0 or n == 1:
+    if n <= 1:
         return 1
     
     return n * Factorial(n-1)
@@ -28,11 +32,16 @@ def Factorial(n):
 
 # Return the probability of desired outcomes/outcomes
 def Probability(outcomes, desired):
+    outcomes = outcomes if outcomes > 0 else 0
+
     return desired / outcomes
 
 
 # Calculate the probability of k outcomes over n trials
 def Binomial(k, n, p):
+    # If n is > 1000, set it to 1000 so our Factorial doesn't blow up
+    n = n if n <= 1000 else 1000
+
     return Choose(n, k) * (p**k) * ((1-p)**(n-k))
 
 
@@ -53,7 +62,7 @@ if __name__ == '__main__':
         elif selection == 2:
             print('Running Choose() ...')
             
-            n = int(input('Enter your n: '))
+            n = int(input('Enter your n (1-1000): '))
             k = int(input('Enter your k: '))
             
             num = Choose(n, k)
@@ -75,7 +84,7 @@ if __name__ == '__main__':
             d = int(input('Enter your desired outcomes: '))
             p = Probability(o, d)
             
-            n = int(input('Enter your n: '))
+            n = int(input('Enter your n (1-1000): '))
             k = int(input('Enter your k: '))
             
             print('Running Binomial() with:')
@@ -91,7 +100,7 @@ if __name__ == '__main__':
             d = int(input('Enter your desired outcomes: '))
             p = Probability(o, d)
             
-            n = int(input('Enter your n: '))
+            n = int(input('Enter your n (1-1000): '))
 
             dist = [Binomial(k, n, p) for k in range(n+1)]
             
@@ -100,4 +109,6 @@ if __name__ == '__main__':
             print('Graphing a binomial distribution ...')
             
             plt.hist(x=range(n+1), bins=n+1, weights=dist)
+            plt.xlabel('Count of desired outcomes')
+            plt.ylabel('Probability for count of desired outcomes')
             plt.show()
